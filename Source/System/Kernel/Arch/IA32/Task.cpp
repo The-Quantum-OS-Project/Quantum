@@ -6,6 +6,8 @@
  * SPDX-License-Identifier: MIT
  */
 
+#include <Types.hpp>
+
 #include "Arch/IA32/CPU.hpp"
 #include "Arch/IA32/Memory.hpp"
 #include "Arch/IA32/Task.hpp"
@@ -15,7 +17,6 @@
 #include "Memory.hpp"
 #include "Panic.hpp"
 #include "Prelude.hpp"
-#include "Types.hpp"
 #include "UserMode.hpp"
 
 namespace Quantum::System::Kernel::Arch::IA32 {
@@ -75,7 +76,7 @@ namespace Quantum::System::Kernel::Arch::IA32 {
     }
   }
 
-  Task::ControlBlock* Task::FindTaskById(UInt32 id) {
+  Task::ControlBlock* Task::FindById(UInt32 id) {
     Task::ControlBlock* current = _allTasksHead;
 
     while (current) {
@@ -416,10 +417,6 @@ namespace Quantum::System::Kernel::Arch::IA32 {
     return _currentTask;
   }
 
-  Task::ControlBlock* Task::Find(UInt32 id) {
-    return FindTaskById(id);
-  }
-
   void Task::SetCurrentAddressSpace(UInt32 pageDirectoryPhysical) {
     if (_currentTask == nullptr) {
       return;
@@ -456,5 +453,23 @@ namespace Quantum::System::Kernel::Arch::IA32 {
     }
 
     return Schedule(&context);
+  }
+
+  bool Task::GrantIOAccess(UInt32 taskId) {
+    Task::ControlBlock* tcb = FindById(taskId);
+
+    if (!tcb) {
+      return false;
+    }
+
+    tcb->caps |= CapabilityIO;
+
+    return true;
+  }
+
+  bool Task::CurrentTaskHasIOAccess() {
+    Task::ControlBlock* tcb = GetCurrent();
+
+    return tcb && (tcb->caps & CapabilityIO) != 0;
   }
 }

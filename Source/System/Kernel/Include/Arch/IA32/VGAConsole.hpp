@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include <Logger.hpp>
-#include <Prelude.hpp>
-#include <String.hpp>
 #include <Types.hpp>
+
+#include "Logger.hpp"
+#include "Prelude.hpp"
 
 namespace Quantum::System::Kernel::Arch::IA32 {
   /**

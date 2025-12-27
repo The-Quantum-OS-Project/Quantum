@@ -8,8 +8,9 @@
 
 #pragma once
 
+#include <Types.hpp>
+
 #include "Logger.hpp"
-#include "Types.hpp"
 
 namespace Quantum::System::Kernel {
   /**
@@ -82,7 +83,7 @@ namespace Quantum::System::Kernel {
            * @param message
            *   The message to write.
            */
-          void Write(String message) override;
+          void Write(CString message) override;
       };
 
       /**
